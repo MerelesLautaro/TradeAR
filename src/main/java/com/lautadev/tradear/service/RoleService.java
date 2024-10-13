@@ -8,10 +8,12 @@ import com.lautadev.tradear.throwable.EntityNotFoundException;
 import com.lautadev.tradear.util.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
+@Transactional
 public class RoleService implements IRoleService{
     @Autowired
     private IRoleRepository roleRepository;

@@ -20,9 +20,8 @@ public class ExchangeController {
     private IExchangeService exchangeService;
 
     @PostMapping("/save")
-    public ResponseEntity<String> saveExchange(@RequestBody Exchange exchange){
-        exchangeService.saveExchange(exchange);
-        return ResponseEntity.ok("Exchange saved successfully");
+    public ResponseEntity<ExchangeDTO> saveExchange(@RequestBody Exchange exchange){
+        return ResponseEntity.ok(exchangeService.saveExchange(exchange));
     }
 
     @GetMapping("/get")
@@ -43,7 +42,7 @@ public class ExchangeController {
     }
 
     @PatchMapping("/edit/{id}")
-    public ResponseEntity<Exchange> editExchange(@PathVariable Long id,@RequestBody Exchange exchange){
+    public ResponseEntity<ExchangeDTO> editExchange(@PathVariable Long id,@RequestBody Exchange exchange){
         return ResponseEntity.ok(exchangeService.editExchange(id,exchange));
     }
 

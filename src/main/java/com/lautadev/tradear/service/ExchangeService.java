@@ -1,7 +1,6 @@
 package com.lautadev.tradear.service;
 
 import com.lautadev.tradear.dto.ExchangeDTO;
-import com.lautadev.tradear.dto.ItemDTO;
 import com.lautadev.tradear.model.Exchange;
 import com.lautadev.tradear.repository.IExchangeRepository;
 import com.lautadev.tradear.repository.IItemRepository;
@@ -10,9 +9,9 @@ import com.lautadev.tradear.util.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ExchangeService implements IExchangeService {
@@ -23,55 +22,31 @@ public class ExchangeService implements IExchangeService {
     private IItemRepository iItemRepository;
 
     @Override
-    public Exchange saveExchange(Exchange exchange) {
+    public ExchangeDTO saveExchange(Exchange exchange) {
         if(exchange != null) {
-            return exchangeRepository.save(exchange);
+           exchangeRepository.save(exchange);
         }
 
-        return null;
+        return ExchangeDTO.fromExchange(exchange);
     }
 
     @Override
     public List<ExchangeDTO> getExchanges() {
         List<Exchange> exchanges = exchangeRepository.findAll();
+        List<ExchangeDTO> exchangeDTOS = new ArrayList<>();
 
-        return exchanges.stream()
-                .map(exchange -> {
-                    List<ItemDTO> offeredItems = exchange.getItemOffered().stream()
-                            .map(itemId -> iItemRepository.findById(itemId)
-                                    .orElseThrow(() -> new EntityNotFoundException("Item Not Found")))
-                            .map(ItemDTO::fromItem)
-                            .collect(Collectors.toList());
+        for(Exchange exchange: exchanges){
+            exchangeDTOS.add(ExchangeDTO.fromExchange(exchange));
+        }
 
-                    List<ItemDTO> requestedItems = exchange.getItemRequested().stream()
-                            .map(itemId -> iItemRepository.findById(itemId)
-                                    .orElseThrow(() -> new EntityNotFoundException("Item Not Found")))
-                            .map(ItemDTO::fromItem)
-                            .collect(Collectors.toList());
+        return exchangeDTOS;
 
-                    return ExchangeDTO.fromExchange(exchange, offeredItems, requestedItems);
-                })
-                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<ExchangeDTO> findExchange(Long id) {
-        Exchange exchange = exchangeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Entity Not Found"));
-
-        List<ItemDTO> offeredItems = exchange.getItemOffered().stream()
-                .map(itemId -> iItemRepository.findById(itemId)
-                        .orElseThrow(() -> new EntityNotFoundException("Item Not Found")))
-                .map(ItemDTO::fromItem)
-                .collect(Collectors.toList());
-
-        List<ItemDTO> requestedItems = exchange.getItemRequested().stream()
-                .map(itemId -> iItemRepository.findById(itemId)
-                        .orElseThrow(() -> new EntityNotFoundException("Item Not Found")))
-                .map(ItemDTO::fromItem)
-                .collect(Collectors.toList());
-
-        return Optional.of(ExchangeDTO.fromExchange(exchange, offeredItems, requestedItems));
+        Exchange exchange = exchangeRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Exchange Not Found"));
+        return Optional.ofNullable(ExchangeDTO.fromExchange(exchange));
     }
 
     @Override
@@ -80,7 +55,7 @@ public class ExchangeService implements IExchangeService {
     }
 
     @Override
-    public Exchange editExchange(Long id, Exchange exchange) {
+    public ExchangeDTO editExchange(Long id, Exchange exchange) {
         Exchange exchangeEdit = exchangeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity Not Found"));
 
         NullAwareBeanUtils.copyNonNullProperties(exchange,exchangeEdit);

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 
 @Service
+@Transactional
 public class AccountService implements IAccountService{
 
     @Autowired
@@ -83,7 +85,8 @@ public class AccountService implements IAccountService{
         account.setCredentialNotExpired(true);
         Set<Role> roleList = roleService.findRoleByName("USER");
         account.setRoleList(roleList);
-        return this.saveAccount(account);
+        this.saveAccount(account);
+        return account;
     }
 
     @Override

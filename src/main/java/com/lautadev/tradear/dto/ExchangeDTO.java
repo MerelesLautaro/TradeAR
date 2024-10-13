@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -23,16 +25,31 @@ public class ExchangeDTO {
     private Status status;
     private ChatDTO chat;
 
-    public static ExchangeDTO fromExchange(Exchange exchange, List<ItemDTO> offeredItems, List<ItemDTO> requestedItems){
+    public static ExchangeDTO fromExchange(Exchange exchange){
         if(exchange == null){
             return null;
         }
 
+        List<ItemDTO> itemDTOSOffered = new ArrayList<>();
+        if(exchange.getItemOffered() != null){
+            itemDTOSOffered = exchange.getItemOffered().stream()
+                    .map(ItemDTO::fromItem)
+                    .collect(Collectors.toList());
+        }
+
+        List<ItemDTO> itemDTOSRequested = new ArrayList<>();
+        if(exchange.getItemOffered() != null){
+            itemDTOSRequested = exchange.getItemOffered().stream()
+                    .map(ItemDTO::fromItem)
+                    .collect(Collectors.toList());
+        }
+
+
         return new ExchangeDTO(
                 exchange.getId(),
                 exchange.getDate(),
-                offeredItems,
-                requestedItems,
+                itemDTOSOffered,
+                itemDTOSRequested,
                 UserSecDTO.fromUser(exchange.getIssuingUser()),
                 UserSecDTO.fromUser(exchange.getReceivingUser()),
                 exchange.getStatus(),

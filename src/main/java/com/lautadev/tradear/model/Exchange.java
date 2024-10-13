@@ -20,9 +20,9 @@ public class Exchange {
     private Long id;
     private LocalDate date;
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<Long> itemOffered;
+    private List<Item> itemOffered;
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<Long> itemRequested;
+    private List<Item> itemRequested;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "issuing_user_id")
     private UserSec issuingUser;
