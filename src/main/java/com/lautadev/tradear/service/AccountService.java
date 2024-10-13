@@ -1,11 +1,14 @@
 package com.lautadev.tradear.service;
 
 import com.lautadev.tradear.model.Account;
+import com.lautadev.tradear.model.GoogleUserInfo;
 import com.lautadev.tradear.model.Role;
 import com.lautadev.tradear.repository.IAccountRepository;
 import com.lautadev.tradear.throwable.EntityNotFoundException;
 import com.lautadev.tradear.util.NullAwareBeanUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -69,7 +72,22 @@ public class AccountService implements IAccountService{
     }
 
     @Override
+    public Account saveAccountOAuth(GoogleUserInfo googleUserInfo) {
+        Account account = new Account();
+        account.setUsername(googleUserInfo.getEmail());
+        String randomPassword = RandomStringUtils.randomAlphanumeric(12);
+        account.setPassword(randomPassword);
+        account.setEnabled(true);
+        account.setAccountNotLocked(true);
+        account.setAccountNotExpired(true);
+        account.setCredentialNotExpired(true);
+        Set<Role> roleList = roleService.findRoleByName("USER");
+        account.setRoleList(roleList);
+        return this.saveAccount(account);
+    }
+
+    @Override
     public String encriptPassword(String password) {
-        return "";
+        return new BCryptPasswordEncoder().encode(password);
     }
 }

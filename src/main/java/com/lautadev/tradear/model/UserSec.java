@@ -22,8 +22,8 @@ public class UserSec {
     private String email;
     @OneToOne
     private Account account;
-    @OneToMany(mappedBy = "issuingUser")
-    private Exchange exchange;
+    @OneToMany(mappedBy = "issuingUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Exchange> exchanges;
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
 }

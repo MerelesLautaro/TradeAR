@@ -1,5 +1,6 @@
 package com.lautadev.tradear.service;
 
+import com.lautadev.tradear.dto.ItemDTO;
 import com.lautadev.tradear.model.Item;
 import com.lautadev.tradear.repository.IItemRepository;
 import com.lautadev.tradear.throwable.EntityNotFoundException;
@@ -7,6 +8,7 @@ import com.lautadev.tradear.util.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,22 +18,29 @@ public class ItemService implements IItemService{
     private IItemRepository iItemRepository;
 
     @Override
-    public Item saveItem(Item item) {
+    public ItemDTO saveItem(Item item) {
         if(item != null) {
-            return iItemRepository.save(item);
+            iItemRepository.save(item);
+        }
+        return ItemDTO.fromItem(item);
+    }
+
+    @Override
+    public List<ItemDTO> getItems() {
+        List<Item> items = iItemRepository.findAll();
+        List<ItemDTO> itemDTOS = new ArrayList<>();
+
+        for(Item item:items){
+            itemDTOS.add(ItemDTO.fromItem(item));
         }
 
-        return null;
+        return itemDTOS;
     }
 
     @Override
-    public List<Item> getItems() {
-        return iItemRepository.findAll();
-    }
-
-    @Override
-    public Optional<Item> findItem(Long id) {
-        return iItemRepository.findById(id);
+    public Optional<ItemDTO> findItem(Long id) {
+        Item item = iItemRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Entity Not Found"));
+        return Optional.ofNullable(ItemDTO.fromItem(item));
     }
 
     @Override
@@ -40,7 +49,7 @@ public class ItemService implements IItemService{
     }
 
     @Override
-    public Item editItem(Long id, Item item) {
+    public ItemDTO editItem(Long id, Item item) {
         Item itemEdit = iItemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity Not Found"));
 
         NullAwareBeanUtils.copyNonNullProperties(item,itemEdit);

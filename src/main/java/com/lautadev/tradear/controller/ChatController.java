@@ -5,6 +5,7 @@ import com.lautadev.tradear.model.Chat;
 import com.lautadev.tradear.service.IChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/chat")
+@PreAuthorize("permitAll()")
 public class ChatController {
 
     @Autowired

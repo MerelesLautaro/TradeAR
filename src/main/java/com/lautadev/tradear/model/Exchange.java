@@ -19,12 +19,18 @@ public class Exchange {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
-    private List<Item> itemOffered;
-    private List<Item> itemRequested;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<Long> itemOffered;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<Long> itemRequested;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_user")
+    @JoinColumn(name = "issuing_user_id")
     private UserSec issuingUser;
+    @ManyToOne
+    @JoinColumn(name = "receiving_user_id")
     private UserSec receivingUser;
     @ManyToOne
     private Status status;
+    @OneToOne
+    private Chat chat;
 }
