@@ -1,6 +1,7 @@
 package com.lautadev.tradear.service;
 
 import com.lautadev.tradear.dto.ExchangeDTO;
+import com.lautadev.tradear.model.Chat;
 import com.lautadev.tradear.model.Exchange;
 import com.lautadev.tradear.repository.IExchangeRepository;
 import com.lautadev.tradear.repository.IItemRepository;
@@ -8,6 +9,7 @@ import com.lautadev.tradear.throwable.EntityNotFoundException;
 import com.lautadev.tradear.util.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,23 @@ public class ExchangeService implements IExchangeService {
     @Autowired
     private IItemRepository iItemRepository;
 
+    @Autowired
+    private IChatService chatService;
+
     @Override
+    @Transactional
     public ExchangeDTO saveExchange(Exchange exchange) {
-        if(exchange != null) {
-           exchangeRepository.save(exchange);
+
+        Exchange savedExchange =  exchangeRepository.save(exchange);
+
+        if(savedExchange.getChat() == null){
+            Chat chat = new Chat();
+            chat.setName(exchange.getItemOffered().toString());
+            chatService.saveChat(chat);
+
+            savedExchange.setChat(chat);
+
+            exchangeRepository.save(savedExchange);
         }
 
         return ExchangeDTO.fromExchange(exchange);

@@ -19,7 +19,7 @@ public class ItemDTO {
     private LocalDate date;
     private String link;
     private int amount;
-    private Category category;
+    private String category;
 
     public static ItemDTO fromItem(Item item){
         if(item == null){
@@ -33,7 +33,7 @@ public class ItemDTO {
                 item.getDate(),
                 item.getLink(),
                 item.getAmount(),
-                item.getCategory()
+                item.getCategory().getName()
         );
     }
 }

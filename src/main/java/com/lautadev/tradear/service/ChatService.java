@@ -7,6 +7,7 @@ import com.lautadev.tradear.throwable.EntityNotFoundException;
 import com.lautadev.tradear.util.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class ChatService implements IChatService{
     private IChatRepository chatRepository;
 
     @Override
+    @Transactional
     public ChatDTO saveChat(Chat chat) {
         if(chat != null){
             chatRepository.save(chat);

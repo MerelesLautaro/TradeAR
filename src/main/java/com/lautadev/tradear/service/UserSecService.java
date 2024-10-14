@@ -1,11 +1,13 @@
 package com.lautadev.tradear.service;
 
+import com.lautadev.tradear.model.Inventory;
 import com.lautadev.tradear.model.UserSec;
 import com.lautadev.tradear.repository.IUserSecRepository;
 import com.lautadev.tradear.throwable.EntityNotFoundException;
 import com.lautadev.tradear.util.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,12 +17,26 @@ public class UserSecService implements IUserSecService{
     @Autowired
     private IUserSecRepository userSecRepository;
 
+    @Autowired
+    private IInventoryService iInventoryService;
+
     @Override
+    @Transactional
     public UserSec saveUser(UserSec userSec) {
-        if(userSec != null) {
-            return userSecRepository.save(userSec);
+
+        UserSec savedUserSec = userSecRepository.save(userSec);
+
+        if (savedUserSec.getInventory() == null) {
+            Inventory inventory = new Inventory();
+            inventory.setUserSec(savedUserSec);
+            iInventoryService.saveInventory(inventory);
+
+            savedUserSec.setInventory(inventory);
+
+            return userSecRepository.save(savedUserSec);
         }
-        return null;
+
+        return savedUserSec;
     }
 
     @Override

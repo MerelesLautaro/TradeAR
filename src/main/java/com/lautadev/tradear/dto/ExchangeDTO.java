@@ -38,8 +38,8 @@ public class ExchangeDTO {
         }
 
         List<ItemDTO> itemDTOSRequested = new ArrayList<>();
-        if(exchange.getItemOffered() != null){
-            itemDTOSRequested = exchange.getItemOffered().stream()
+        if(exchange.getItemRequested() != null){
+            itemDTOSRequested = exchange.getItemRequested().stream()
                     .map(ItemDTO::fromItem)
                     .collect(Collectors.toList());
         }

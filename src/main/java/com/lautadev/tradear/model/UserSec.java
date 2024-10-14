@@ -26,4 +26,6 @@ public class UserSec {
     private List<Exchange> exchanges;
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
+    @OneToOne
+    private Inventory inventory;
 }
