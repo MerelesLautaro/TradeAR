@@ -1,7 +1,10 @@
 package com.lautadev.tradear.model;
 
+import lombok.NoArgsConstructor;
+
 import java.util.Map;
 
+@NoArgsConstructor
 public class GoogleUserInfo {
 
     private Map<String, Object> attributes;

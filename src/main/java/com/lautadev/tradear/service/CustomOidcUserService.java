@@ -2,11 +2,14 @@ package com.lautadev.tradear.service;
 
 import com.lautadev.tradear.model.Account;
 import com.lautadev.tradear.model.GoogleUserInfo;
+import com.lautadev.tradear.model.GoogleUserInfoAndroid;
 import com.lautadev.tradear.model.UserSec;
 import com.lautadev.tradear.repository.IUserSecRepository;
 import com.lautadev.tradear.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -92,18 +95,18 @@ public class CustomOidcUserService extends OidcUserService {
         return new DefaultOidcUser(userDetails.getAuthorities(), oidcUser.getIdToken(), oidcUser.getUserInfo(), "sub");
     }
 
-    public OidcUser processGoogleUser(GoogleUserInfo googleUserInfo) {
-        Optional<UserSec> userOptional = userSecRepository.findByEmail(googleUserInfo.getEmail());
+    public OidcUser processGoogleUser(GoogleUserInfoAndroid googleUserInfoAndroid) {
+        Optional<UserSec> userOptional = userSecRepository.findByEmail(googleUserInfoAndroid.getEmail());
         Account account;
 
         if (userOptional.isEmpty()) {
-            account = accountService.saveAccountOAuth(googleUserInfo);
+            account = accountService.saveAccountOAuthFromAndroid(googleUserInfoAndroid);
 
             if (account.getId() != null) {
                 UserSec userSec = new UserSec();
-                userSec.setEmail(googleUserInfo.getEmail());
-                userSec.setName(googleUserInfo.getName());
-                userSec.setLastname(googleUserInfo.getLastname());
+                userSec.setEmail(googleUserInfoAndroid.getEmail());
+                userSec.setName(googleUserInfoAndroid.getName());
+                userSec.setLastname(googleUserInfoAndroid.getLastname());
                 userSec.setAccount(account);
                 userSecService.saveUser(userSec);
             }

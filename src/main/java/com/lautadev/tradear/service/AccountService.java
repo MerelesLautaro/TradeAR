@@ -2,6 +2,7 @@ package com.lautadev.tradear.service;
 
 import com.lautadev.tradear.model.Account;
 import com.lautadev.tradear.model.GoogleUserInfo;
+import com.lautadev.tradear.model.GoogleUserInfoAndroid;
 import com.lautadev.tradear.model.Role;
 import com.lautadev.tradear.repository.IAccountRepository;
 import com.lautadev.tradear.throwable.EntityNotFoundException;
@@ -77,6 +78,22 @@ public class AccountService implements IAccountService{
     public Account saveAccountOAuth(GoogleUserInfo googleUserInfo) {
         Account account = new Account();
         account.setUsername(googleUserInfo.getEmail());
+        String randomPassword = RandomStringUtils.randomAlphanumeric(12);
+        account.setPassword(randomPassword);
+        account.setEnabled(true);
+        account.setAccountNotLocked(true);
+        account.setAccountNotExpired(true);
+        account.setCredentialNotExpired(true);
+        Set<Role> roleList = roleService.findRoleByName("USER");
+        account.setRoleList(roleList);
+        this.saveAccount(account);
+        return account;
+    }
+
+    @Override
+    public Account saveAccountOAuthFromAndroid(GoogleUserInfoAndroid googleUserInfoAndroid) {
+        Account account = new Account();
+        account.setUsername(googleUserInfoAndroid.getEmail());
         String randomPassword = RandomStringUtils.randomAlphanumeric(12);
         account.setPassword(randomPassword);
         account.setEnabled(true);

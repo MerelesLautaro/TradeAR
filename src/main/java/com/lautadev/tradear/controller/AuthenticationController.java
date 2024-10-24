@@ -2,7 +2,7 @@ package com.lautadev.tradear.controller;
 
 import com.lautadev.tradear.dto.AuthLoginRequestDTO;
 import com.lautadev.tradear.dto.AuthLoginResponseDTO;
-import com.lautadev.tradear.model.GoogleUserInfo;
+import com.lautadev.tradear.model.GoogleUserInfoAndroid;
 import com.lautadev.tradear.service.CustomOidcUserService;
 import com.lautadev.tradear.service.IUserDetailsService;
 import jakarta.validation.Valid;
@@ -30,10 +30,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login-google")
-    public ResponseEntity<String> login(@RequestBody @Valid GoogleUserInfo googleUserInfo) {
+    public ResponseEntity<String> login(@RequestBody GoogleUserInfoAndroid googleUserInfoAndroid) {
         try {
-            OidcUser oidcUser = customOidcUserService.processGoogleUser(googleUserInfo);
-            return ResponseEntity.ok("User authenticated successfully");
+            OidcUser oidcUser = customOidcUserService.processGoogleUser(googleUserInfoAndroid);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed: " + e.getMessage());
         }
