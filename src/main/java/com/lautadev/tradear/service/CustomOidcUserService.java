@@ -92,4 +92,36 @@ public class CustomOidcUserService extends OidcUserService {
         return new DefaultOidcUser(userDetails.getAuthorities(), oidcUser.getIdToken(), oidcUser.getUserInfo(), "sub");
     }
 
+    public OidcUser processGoogleUser(GoogleUserInfo googleUserInfo) {
+        Optional<UserSec> userOptional = userSecRepository.findByEmail(googleUserInfo.getEmail());
+        Account account;
+
+        if (userOptional.isEmpty()) {
+            account = accountService.saveAccountOAuth(googleUserInfo);
+
+            if (account.getId() != null) {
+                UserSec userSec = new UserSec();
+                userSec.setEmail(googleUserInfo.getEmail());
+                userSec.setName(googleUserInfo.getName());
+                userSec.setLastname(googleUserInfo.getLastname());
+                userSec.setAccount(account);
+                userSecService.saveUser(userSec);
+            }
+        } else {
+            account = userOptional.get().getAccount();
+        }
+
+        // UserDetailsService para obtener UserDetails y authorities
+        UserDetails userDetails = userDetailsService.loadUserByUsername(account.getUsername());
+
+        // Crear el token JWT
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        String jwtToken = jwtUtils.createToken(authentication);
+
+        // Token impreso
+        System.out.println("Generated JWT Token: " + jwtToken);
+
+        return new DefaultOidcUser(userDetails.getAuthorities(), null, null, "sub");
+    }
+
 }
