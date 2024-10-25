@@ -20,6 +20,7 @@ public class ItemDTO {
     private String link;
     private int amount;
     private String category;
+    private UserSecDTO userSecDTO;
 
     public static ItemDTO fromItem(Item item){
         if(item == null){
@@ -33,7 +34,8 @@ public class ItemDTO {
                 item.getDate(),
                 item.getLink(),
                 item.getAmount(),
-                item.getCategory().getName()
+                item.getCategory().getName(),
+                UserSecDTO.fromUser(item.getInventory().getUserSec())
         );
     }
 }

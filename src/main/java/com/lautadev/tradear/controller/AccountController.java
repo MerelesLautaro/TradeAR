@@ -35,6 +35,12 @@ public class AccountController {
         return account.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/get/{username}")
+    public ResponseEntity<Account>  findUserEntityByUsername(@PathVariable String username){
+        Optional<Account> account = accountService.findUserEntityByUsername(username);
+        return account.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
         accountService.deleteAccount(id);

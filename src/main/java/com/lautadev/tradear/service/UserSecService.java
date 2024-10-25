@@ -1,5 +1,6 @@
 package com.lautadev.tradear.service;
 
+import com.lautadev.tradear.dto.UserSecDTO;
 import com.lautadev.tradear.model.Inventory;
 import com.lautadev.tradear.model.UserSec;
 import com.lautadev.tradear.repository.IUserSecRepository;
@@ -62,5 +63,11 @@ public class UserSecService implements IUserSecService{
 
         return this.saveUser(userSecEdit);
 
+    }
+
+    @Override
+    public Optional<UserSecDTO> findByEmail(String email) {
+        Optional<UserSec> userSec = userSecRepository.findByEmail(email);
+        return userSec.map(UserSecDTO::fromUser);
     }
 }

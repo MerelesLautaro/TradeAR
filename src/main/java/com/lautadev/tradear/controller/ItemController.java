@@ -35,6 +35,11 @@ public class ItemController {
         return item.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/get/findItemsNotBelongingToUser/{id}")
+    public ResponseEntity<List<ItemDTO>> findItemsNotBelongingToUser(@PathVariable  Long id){
+        return ResponseEntity.ok(iItemService.findItemsNotBelongingToUser(id));
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteItem(@PathVariable Long id) {
         iItemService.deleteItem(id);

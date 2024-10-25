@@ -56,4 +56,16 @@ public class ItemService implements IItemService{
 
         return this.saveItem(itemEdit);
     }
+
+    @Override
+    public List<ItemDTO> findItemsNotBelongingToUser(Long id) {
+        List<Item> items = iItemRepository.findItemsNotBelongingToUser(id);
+        List<ItemDTO> itemDTOS = new ArrayList<>();
+
+        for(Item item: items){
+            itemDTOS.add(ItemDTO.fromItem(item));
+        }
+
+        return itemDTOS;
+    }
 }

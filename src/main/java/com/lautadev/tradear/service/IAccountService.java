@@ -16,4 +16,5 @@ public interface IAccountService {
     public String encriptPassword(String password);
     public Account saveAccountOAuth(GoogleUserInfo googleUserInfo);
     public Account saveAccountOAuthFromAndroid(GoogleUserInfoAndroid googleUserInfoAndroid);
+    public Optional<Account> findUserEntityByUsername(String username);
 }

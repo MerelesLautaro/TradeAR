@@ -107,6 +107,11 @@ public class AccountService implements IAccountService{
     }
 
     @Override
+    public Optional<Account> findUserEntityByUsername(String username) {
+        return accountRepository.findUserEntityByUsername(username);
+    }
+
+    @Override
     public String encriptPassword(String password) {
         return new BCryptPasswordEncoder().encode(password);
     }

@@ -1,5 +1,6 @@
 package com.lautadev.tradear.controller;
 
+import com.lautadev.tradear.dto.UserSecDTO;
 import com.lautadev.tradear.model.UserSec;
 import com.lautadev.tradear.service.IUserSecService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,18 @@ public class UserSecController {
     public ResponseEntity<UserSec> findUser(@PathVariable Long id){
         Optional<UserSec> userSec = userSecService.findUser(id);
         return userSec.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/get/findByEmail")
+    public ResponseEntity<UserSecDTO> findUserByEmail(@RequestParam String email){
+        Optional<UserSecDTO> userSecDTO = userSecService.findByEmail(email);
+        return userSecDTO.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+        userSecService.deleteUser(id);
+        return ResponseEntity.ok("User deleted");
     }
 
     @PatchMapping("/edit/{id}")
