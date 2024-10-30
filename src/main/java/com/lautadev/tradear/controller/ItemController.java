@@ -36,8 +36,13 @@ public class ItemController {
     }
 
     @GetMapping("/get/findItemsNotBelongingToUser/{id}")
-    public ResponseEntity<List<ItemDTO>> findItemsNotBelongingToUser(@PathVariable  Long id){
+    public ResponseEntity<List<ItemDTO>> findItemsNotBelongingToUser(@PathVariable Long id){
         return ResponseEntity.ok(iItemService.findItemsNotBelongingToUser(id));
+    }
+
+    @GetMapping("/get/findItemsBelongingToUser/{id}")
+    public ResponseEntity<List<ItemDTO>> findItemsBelongingToUser(@PathVariable Long id){
+        return ResponseEntity.ok(iItemService.findItemsBelongingToUser(id));
     }
 
     @DeleteMapping("/delete/{id}")

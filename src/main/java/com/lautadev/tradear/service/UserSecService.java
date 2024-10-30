@@ -46,8 +46,9 @@ public class UserSecService implements IUserSecService{
     }
 
     @Override
-    public Optional<UserSec> findUser(Long id) {
-        return userSecRepository.findById(id);
+    public Optional<UserSecDTO> findUser(Long id) {
+        Optional<UserSec> userSec = userSecRepository.findById(id);
+        return userSec.map(UserSecDTO::fromUser);
     }
 
     @Override

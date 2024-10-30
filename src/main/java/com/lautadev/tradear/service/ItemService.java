@@ -68,4 +68,16 @@ public class ItemService implements IItemService{
 
         return itemDTOS;
     }
+
+    @Override
+    public List<ItemDTO> findItemsBelongingToUser(Long id) {
+        List<Item> items = iItemRepository.findItemsBelongingToUser(id);
+        List<ItemDTO> itemDTOS = new ArrayList<>();
+
+        for(Item item: items){
+            itemDTOS.add(ItemDTO.fromItem(item));
+        }
+
+        return itemDTOS;
+    }
 }

@@ -13,4 +13,5 @@ public interface IItemService {
     public void deleteItem(Long id);
     public ItemDTO editItem(Long id, Item item);
     public List<ItemDTO> findItemsNotBelongingToUser(Long id);
+    public List<ItemDTO> findItemsBelongingToUser(Long id);
 }

@@ -31,8 +31,8 @@ public class UserSecController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<UserSec> findUser(@PathVariable Long id){
-        Optional<UserSec> userSec = userSecService.findUser(id);
+    public ResponseEntity<UserSecDTO> findUser(@PathVariable Long id){
+        Optional<UserSecDTO> userSec = userSecService.findUser(id);
         return userSec.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface IUserSecService {
     public UserSec saveUser(UserSec userSec);
     public List<UserSec> getUsers();
-    public Optional<UserSec> findUser(Long id);
+    public Optional<UserSecDTO> findUser(Long id);
     public void deleteUser(Long id);
     public UserSec editUser(Long id, UserSec userSec);
     public Optional<UserSecDTO> findByEmail(String email);
