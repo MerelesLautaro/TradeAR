@@ -14,6 +14,8 @@ public class UserSecDTO {
     private String name;
     private String lastname;
     private String email;
+    private String pictureUrl;
+    private int itemCount;
 
     public static UserSecDTO fromUser(UserSec userSec){
         if(userSec == null){
@@ -24,7 +26,9 @@ public class UserSecDTO {
                 userSec.getId(),
                 userSec.getName(),
                 userSec.getLastname(),
-                userSec.getEmail()
+                userSec.getEmail(),
+                userSec.getPictureUrl(),
+                userSec.getInventory().getItems().size()
         );
     }
 }

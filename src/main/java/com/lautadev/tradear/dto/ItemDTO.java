@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -16,7 +16,7 @@ public class ItemDTO {
     private Long id;
     private String name;
     private String description;
-    private LocalDate date;
+    private Date date;
     private String link;
     private int amount;
     private String category;

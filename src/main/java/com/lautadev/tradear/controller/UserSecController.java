@@ -36,6 +36,12 @@ public class UserSecController {
         return userSec.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/get/user-entity/{id}")
+    public ResponseEntity<UserSec> findUserEntity(@PathVariable Long id){
+        Optional<UserSec> userSec = userSecService.findUserEntity(id);
+        return userSec.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/get/findByEmail")
     public ResponseEntity<UserSecDTO> findUserByEmail(@RequestParam String email){
         Optional<UserSecDTO> userSecDTO = userSecService.findByEmail(email);

@@ -20,8 +20,8 @@ public class ExchangeController {
     private IExchangeService exchangeService;
 
     @PostMapping("/save")
-    public ResponseEntity<ExchangeDTO> saveExchange(@RequestBody Exchange exchange){
-        return ResponseEntity.ok(exchangeService.saveExchange(exchange));
+    public ResponseEntity<ExchangeDTO> saveExchange(@RequestBody ExchangeDTO exchangeDTO){
+        return ResponseEntity.ok(exchangeService.saveExchange(exchangeDTO));
     }
 
     @GetMapping("/get")
@@ -35,6 +35,11 @@ public class ExchangeController {
         return exchange.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/get/my-exchanges")
+    public ResponseEntity<List<ExchangeDTO>> myExchanges(@RequestParam String email){
+        return ResponseEntity.ok(exchangeService.findExchangesByUserEmail(email));
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteExchange(@PathVariable Long id){
         exchangeService.deleteExchange(id);
@@ -45,6 +50,5 @@ public class ExchangeController {
     public ResponseEntity<ExchangeDTO> editExchange(@PathVariable Long id,@RequestBody Exchange exchange){
         return ResponseEntity.ok(exchangeService.editExchange(id,exchange));
     }
-
 
 }

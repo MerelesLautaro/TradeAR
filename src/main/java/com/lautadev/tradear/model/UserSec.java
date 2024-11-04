@@ -20,6 +20,7 @@ public class UserSec {
     private String name;
     private String lastname;
     private String email;
+    private String pictureUrl;
     @OneToOne
     private Account account;
     @OneToMany(mappedBy = "issuingUser", cascade = CascadeType.ALL, orphanRemoval = true)

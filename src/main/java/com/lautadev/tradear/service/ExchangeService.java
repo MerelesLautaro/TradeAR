@@ -3,46 +3,73 @@ package com.lautadev.tradear.service;
 import com.lautadev.tradear.dto.ExchangeDTO;
 import com.lautadev.tradear.model.Chat;
 import com.lautadev.tradear.model.Exchange;
+import com.lautadev.tradear.model.Item;
+import com.lautadev.tradear.model.Status;
 import com.lautadev.tradear.repository.IExchangeRepository;
 import com.lautadev.tradear.repository.IItemRepository;
+import com.lautadev.tradear.repository.IStatusRepository;
+import com.lautadev.tradear.repository.IUserSecRepository;
 import com.lautadev.tradear.throwable.EntityNotFoundException;
 import com.lautadev.tradear.util.NullAwareBeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ExchangeService implements IExchangeService {
-    @Autowired
-    private IExchangeRepository exchangeRepository;
 
-    @Autowired
-    private IItemRepository iItemRepository;
+    private final IExchangeRepository exchangeRepository;
+    private final IItemRepository iItemRepository;
+    private final IChatService chatService;
+    private final IUserSecRepository userSecRepository;
+    private final IStatusRepository statusRepository;
 
-    @Autowired
-    private IChatService chatService;
+    public ExchangeService(IExchangeRepository exchangeRepository, IItemRepository iItemRepository,
+                           IChatService chatService, IUserSecRepository userSecRepository, IStatusRepository statusRepository){
+        this.exchangeRepository = exchangeRepository;
+        this.iItemRepository = iItemRepository;
+        this.chatService = chatService;
+        this.userSecRepository = userSecRepository;
+        this.statusRepository = statusRepository;
+    }
 
     @Override
     @Transactional
-    public ExchangeDTO saveExchange(Exchange exchange) {
+    public ExchangeDTO saveExchange(ExchangeDTO exchangeDTO) {
+        Exchange exchange = Exchange.fromDTO(exchangeDTO, iItemRepository, userSecRepository);
+        exchange.setDate(LocalDateTime.now());
+        Exchange savedExchange = exchangeRepository.save(exchange);
 
-        Exchange savedExchange =  exchangeRepository.save(exchange);
+        boolean isUpdated = false;
 
-        if(savedExchange.getChat() == null){
+        if (savedExchange.getChat() == null) {
             Chat chat = new Chat();
-            chat.setName(exchange.getItemOffered().toString());
+            List<Item> items = exchange.getItemRequested();
+
+            if (!items.isEmpty()) {
+                chat.setName(items.get(0).toString());
+            }
+
             chatService.saveChat(chat);
-
             savedExchange.setChat(chat);
+            isUpdated = true;
+        }
 
+        if (savedExchange.getStatus() == null) {
+            savedExchange.setStatus(statusRepository.findStatusByName("PENDIENTE"));
+            isUpdated = true;
+        }
+
+        if (isUpdated) {
             exchangeRepository.save(savedExchange);
         }
 
-        return ExchangeDTO.fromExchange(exchange);
+        return ExchangeDTO.fromExchange(savedExchange);
     }
 
     @Override
@@ -75,6 +102,19 @@ public class ExchangeService implements IExchangeService {
 
         NullAwareBeanUtils.copyNonNullProperties(exchange,exchangeEdit);
 
-        return this.saveExchange(exchangeEdit);
+        exchangeRepository.save(exchangeEdit);
+        return ExchangeDTO.fromExchange(exchangeEdit);
+    }
+
+    @Override
+    public List<ExchangeDTO> findExchangesByUserEmail(String email) {
+        List<Exchange> exchanges = exchangeRepository.findExchangesByUserEmail(email);
+        List<ExchangeDTO> exchangeDTOS = new ArrayList<>();
+
+        for(Exchange exchange: exchanges){
+            exchangeDTOS.add(ExchangeDTO.fromExchange(exchange));
+        }
+
+        return exchangeDTOS;
     }
 }

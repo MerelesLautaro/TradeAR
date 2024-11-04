@@ -30,8 +30,8 @@ public class ChatController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<ChatDTO> findChat(@PathVariable Long id){
-        Optional<ChatDTO> chat = chatService.findChat(id);
+    public ResponseEntity<Chat> findChat(@PathVariable Long id){
+        Optional<Chat> chat = chatService.findChat(id);
         return chat.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 

@@ -42,9 +42,8 @@ public class ChatService implements IChatService{
     }
 
     @Override
-    public Optional<ChatDTO> findChat(Long id) {
-        Chat chat = chatRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Entity Not Found"));
-        return Optional.ofNullable(ChatDTO.fromChat(chat));
+    public Optional<Chat> findChat(Long id) {
+        return chatRepository.findById(id);
     }
 
     @Override

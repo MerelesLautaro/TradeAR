@@ -1,6 +1,7 @@
 package com.lautadev.tradear.controller;
 
 import com.lautadev.tradear.dto.MessageDTO;
+import com.lautadev.tradear.dto.SendMessageDTO;
 import com.lautadev.tradear.model.Message;
 import com.lautadev.tradear.service.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class MessageController {
     private IMessageService messageService;
 
     @PostMapping("/save")
-    public ResponseEntity<MessageDTO> saveMessage(@RequestBody Message message){
-        return ResponseEntity.ok(messageService.saveMessage(message));
+    public ResponseEntity<MessageDTO> saveMessage(@RequestBody SendMessageDTO sendMessageDTO){
+        return ResponseEntity.ok(messageService.saveMessage(sendMessageDTO));
     }
 
     @GetMapping("/get")

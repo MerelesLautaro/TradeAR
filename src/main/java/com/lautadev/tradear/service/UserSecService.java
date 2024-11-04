@@ -52,6 +52,11 @@ public class UserSecService implements IUserSecService{
     }
 
     @Override
+    public Optional<UserSec> findUserEntity(Long id) {
+        return userSecRepository.findById(id);
+    }
+
+    @Override
     public void deleteUser(Long id) {
         userSecRepository.deleteById(id);
     }

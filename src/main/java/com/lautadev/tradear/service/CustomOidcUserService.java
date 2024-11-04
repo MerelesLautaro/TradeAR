@@ -8,8 +8,6 @@ import com.lautadev.tradear.repository.IUserSecRepository;
 import com.lautadev.tradear.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -70,6 +68,7 @@ public class CustomOidcUserService extends OidcUserService {
                 userSec.setEmail(googleUserInfo.getEmail());
                 userSec.setName(googleUserInfo.getName());
                 userSec.setLastname(googleUserInfo.getLastname());
+                userSec.setPictureUrl(googleUserInfo.getProfileImageUrl());
                 userSec.setAccount(account);
 
                 userSecService.saveUser(userSec);
@@ -107,6 +106,7 @@ public class CustomOidcUserService extends OidcUserService {
                 userSec.setEmail(googleUserInfoAndroid.getEmail());
                 userSec.setName(googleUserInfoAndroid.getName());
                 userSec.setLastname(googleUserInfoAndroid.getLastname());
+                userSec.setPictureUrl(googleUserInfoAndroid.getPictureUrl());
                 userSec.setAccount(account);
                 userSecService.saveUser(userSec);
             }

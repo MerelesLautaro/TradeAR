@@ -28,4 +28,8 @@ public class GoogleUserInfo {
     public String getEmail() {
         return (String) attributes.get("email");
     }
+
+    public String getProfileImageUrl() {
+        return (String) attributes.get("picture");
+    }
 }

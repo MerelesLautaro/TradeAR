@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ExchangeDTO {
     private Long id;
-    private LocalDate date;
+    private LocalDateTime date;
     private List<ItemDTO> itemOffered;
     private List<ItemDTO> itemRequested;
     private UserSecDTO issuingUser;

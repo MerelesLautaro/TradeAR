@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface IChatService {
     public ChatDTO saveChat(Chat chat);
     public List<ChatDTO> getChats();
-    public Optional<ChatDTO> findChat(Long id);
+    public Optional<Chat> findChat(Long id);
     public void deleteChat(Long id);
     public ChatDTO editChat(Long id, Chat chat);
 }

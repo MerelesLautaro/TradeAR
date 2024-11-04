@@ -1,13 +1,13 @@
 package com.lautadev.tradear.service;
 
 import com.lautadev.tradear.dto.MessageDTO;
+import com.lautadev.tradear.dto.SendMessageDTO;
 import com.lautadev.tradear.model.Message;
-import com.lautadev.tradear.model.UserSec;
+import com.lautadev.tradear.repository.IChatRepository;
 import com.lautadev.tradear.repository.IMessageRepository;
 import com.lautadev.tradear.repository.IUserSecRepository;
 import com.lautadev.tradear.throwable.EntityNotFoundException;
 import com.lautadev.tradear.util.NullAwareBeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,24 +17,20 @@ import java.util.Optional;
 @Service
 public class MessageService implements IMessageService {
 
-    @Autowired
-    private IMessageRepository messageRepository;
+    private final IMessageRepository messageRepository;
+    private final IUserSecRepository userSecRepository;
+    private final IChatRepository chatRepository;
 
-    @Autowired
-    private IUserSecRepository userSecRepository;
+    public MessageService(IMessageRepository messageRepository, IUserSecRepository userSecRepository, IChatRepository chatRepository){
+        this.messageRepository = messageRepository;
+        this.userSecRepository = userSecRepository;
+        this.chatRepository =  chatRepository;
+    }
 
     @Override
-    public MessageDTO saveMessage(Message message) {
-        if (message != null) {
-            if (message.getSender() != null && message.getSender().getId() != null) {
-                UserSec sender = userSecRepository.findById(message.getSender().getId())
-                        .orElseThrow(() -> new EntityNotFoundException("Sender not found"));
-                message.setSender(sender);
-            }
-            messageRepository.save(message);
-        }
-
-        return MessageDTO.fromMessage(message);
+    public MessageDTO saveMessage(SendMessageDTO sendMessageDTO) {
+        Message message = Message.fromDTO(sendMessageDTO,userSecRepository,chatRepository);
+        return MessageDTO.fromMessage(messageRepository.save(message));
     }
 
     @Override
@@ -66,6 +62,6 @@ public class MessageService implements IMessageService {
 
         NullAwareBeanUtils.copyNonNullProperties(message,messageEdit);
 
-        return this.saveMessage(messageEdit);
+        return MessageDTO.fromMessage(messageRepository.save(message));
     }
 }

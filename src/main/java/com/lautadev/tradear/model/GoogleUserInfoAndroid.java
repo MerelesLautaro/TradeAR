@@ -13,4 +13,5 @@ public class GoogleUserInfoAndroid {
     private String email;
     private String name;
     private String lastname;
+    private String pictureUrl;
 }
